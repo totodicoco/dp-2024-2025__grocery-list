@@ -101,8 +101,9 @@ public class Main {
 
                 String itemName = positionalArgs.get(1);
                 var newGroceryList = groceryList.stream()
-                        .filter(item -> !item.contains(itemName))
+                        .filter(item -> !item.split(":")[0].trim().equalsIgnoreCase(itemName))
                         .toList();
+                //modification pour que la suppression soit plus précise
 
                 var outputFile = new File(fileName);
 
