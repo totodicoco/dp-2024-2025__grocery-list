@@ -15,9 +15,42 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+class GroceryItem {
+    private String name;
+    private int quantity;
+
+    public GroceryItem() {}
+
+    public GroceryItem(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return name + ": " + quantity;
+    }
+}
 
 public class Main {
-
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static void main(String[] args) throws IOException {
@@ -25,10 +58,8 @@ public class Main {
     }
 
     public static int exec(String[] args) throws IOException {
-        // Setup CLI interface
         Options cliOptions = new Options();
         CommandLineParser parser = new DefaultParser();
-
         cliOptions.addRequiredOption("s", "source", true, "File containing the grocery list");
 
         CommandLine cmd;
@@ -40,7 +71,6 @@ public class Main {
         }
 
         String fileName = cmd.getOptionValue("s");
-
         List<String> positionalArgs = cmd.getArgList();
         if (positionalArgs.isEmpty()) {
             System.err.println("Missing Command");
@@ -48,27 +78,15 @@ public class Main {
         }
 
         String command = positionalArgs.get(0);
-
-        // Load current grocery list state
-
         Path filePath = Paths.get(fileName);
-
-        String fileContent = "";
-
-        List<String> groceryList;
+        List<GroceryItem> groceryList;
 
         if (Files.exists(filePath)) {
-            fileContent = Files.readString(filePath);
-
-            var parsedList = OBJECT_MAPPER.readValue(fileContent, new TypeReference<List<String>>() {
-            });
-            // Cast the list as an ArrayList to ensure its mutability
-            groceryList = new ArrayList<>(parsedList);
+            String fileContent = Files.readString(filePath);
+            groceryList = OBJECT_MAPPER.readValue(fileContent, new TypeReference<List<GroceryItem>>() {});
         } else {
             groceryList = new ArrayList<>();
         }
-
-        // interpret command
 
         switch (command) {
             case "add" -> {
@@ -76,21 +94,20 @@ public class Main {
                     System.err.println("Missing arguments");
                     return 1;
                 }
-
                 String itemName = positionalArgs.get(1);
-                int quantity = Integer.parseInt(positionalArgs.get(2));
-
-                groceryList.add(itemName + ": " + quantity);
-
-                var outputFile = new File(fileName);
-
-                OBJECT_MAPPER.writeValue(outputFile, groceryList);
+                int quantity;
+                try {
+                    quantity = Integer.parseInt(positionalArgs.get(2));
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid quantity, please enter a valid number.");
+                    return 1;
+                }
+                groceryList.add(new GroceryItem(itemName, quantity));
+                OBJECT_MAPPER.writeValue(new File(fileName), groceryList);
                 return 0;
             }
             case "list" -> {
-                for (String item : groceryList) {
-                    System.out.println(item);
-                }
+                groceryList.forEach(item -> System.out.println(item));
                 return 0;
             }
             case "remove" -> {
@@ -98,20 +115,18 @@ public class Main {
                     System.err.println("Missing arguments");
                     return 1;
                 }
-
                 String itemName = positionalArgs.get(1);
-                var newGroceryList = groceryList.stream()
-                        .filter(item -> !item.split(":")[0].trim().equalsIgnoreCase(itemName))
-                        .toList();
-                //modification pour que la suppression soit plus précise
-
-                var outputFile = new File(fileName);
-
-                OBJECT_MAPPER.writeValue(outputFile, newGroceryList);
+                groceryList = groceryList.stream()
+                        .filter(item -> !item.getName().equalsIgnoreCase(itemName))
+                        .collect(Collectors.toList());
+                OBJECT_MAPPER.writeValue(new File(fileName), groceryList);
                 return 0;
             }
-
-            default -> throw new IllegalArgumentException("Unknown command: " + command);
+            default -> {
+                System.err.println("Unknown command: " + command);
+                return 1;
+            }
         }
     }
 }
+
