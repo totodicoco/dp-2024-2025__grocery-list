@@ -102,7 +102,22 @@ public class Main {
                     System.err.println("Invalid quantity, please enter a valid number.");
                     return 1;
                 }
-                groceryList.add(new GroceryItem(itemName, quantity));
+
+                //modification de l'aout qui empêche le doublon et ajoute a la quantité existante
+                boolean itemExists = false;
+
+                for (GroceryItem item : groceryList) {
+                    if (item.getName().equalsIgnoreCase(itemName)) {
+                        item.setQuantity(item.getQuantity() + quantity);
+                        itemExists = true;
+                        break;
+                    }
+                }
+
+                if (!itemExists) {
+                    groceryList.add(new GroceryItem(itemName, quantity));
+                }
+
                 OBJECT_MAPPER.writeValue(new File(fileName), groceryList);
                 return 0;
             }
@@ -129,4 +144,3 @@ public class Main {
         }
     }
 }
-
