@@ -19,7 +19,7 @@ public class Main {
         try {
             System.exit(exec(args));
         } catch (IOException ex) {
-            System.err.println("File error: " + ex.getMessage());
+            System.err.println("Erreur de fichier: " + ex.getMessage());
             System.exit(1);
         }
     }
@@ -28,18 +28,20 @@ public class Main {
         // def options de la ligne de commande
         Options cliOptions = new Options();
         CommandLineParser parser = new DefaultParser();
-        cliOptions.addRequiredOption("s", "source", true, "File containing the grocery list");
-        cliOptions.addOption("f", "format", true, "Storage format: json or csv (default: json)");
+        cliOptions.addOption("c", "category", true, "Catégorie pour les articles");
+        cliOptions.addRequiredOption("s", "source", true, "Fichier contenant la liste de courses");
+        cliOptions.addOption("f", "format", true, "Format de stockage: json ou csv (défaut: json)");
 
         CommandLine cmd;
         try {
             cmd = parser.parse(cliOptions, args);
         } catch (ParseException ex) {
-            System.err.println("Error parsing arguments: " + ex.getMessage());
+            System.err.println("Erreur d'analyse des arguments: " + ex.getMessage());
             return 1;
         }
 
         // prend les arguments
+        String category = cmd.getOptionValue("category", "default");
         String fileName = cmd.getOptionValue("s");
         String format = cmd.getOptionValue("f", "json");
 
@@ -53,16 +55,17 @@ public class Main {
         // position des arguments
         List<String> positionalArgs = cmd.getArgList();
         if (positionalArgs.isEmpty()) {
-            System.err.println("Missing command (use add, list, remove, clear)");
+            System.err.println("Commande manquante (utilisez add, list, remove, clear)");
             return 1;
         }
 
         // la commande à exécuter
         String command = positionalArgs.get(0);
 
-        // liste des courses selon le format
-        Map<String, Integer> groceryList = format.equals("csv") ? loadGroceryListFromCSV(fileName)
-                : loadGroceryListFromJSON(fileName);
+        // liste des courses selon le format, maintenant avec des catégories
+        Map<String, Map<String, Integer>> categorizedGroceryList = format.equals("csv")
+                ? loadCategorizedGroceryListFromCSV(fileName)
+                : loadCategorizedGroceryListFromJSON(fileName);
 
         // les commandes qui s'executent
         switch (command) {
@@ -76,18 +79,24 @@ public class Main {
                 try {
                     quantity = Integer.parseInt(positionalArgs.get(2));
                 } catch (NumberFormatException e) {
-                    System.err.println("Quantity must be an integer");
+                    System.err.println("La quantité doit être un entier");
                     return 1;
                 }
-                groceryList.put(itemName, groceryList.getOrDefault(itemName, 0) + quantity);
-                saveGroceryList(fileName, groceryList, format);
+                // ajouter l'item a la bonne categorie
+                categorizedGroceryList.computeIfAbsent(category, k -> new HashMap<>())
+                        .put(itemName, categorizedGroceryList.getOrDefault(category, new HashMap<>())
+                                .getOrDefault(itemName, 0) + quantity);
+                saveCategorizedGroceryList(fileName, categorizedGroceryList, format);
                 return 0;
             }
             case "list" -> {
-                if (groceryList.isEmpty()) {
-                    System.out.println("Your grocery list is empty.");
+                if (categorizedGroceryList.isEmpty()) {
+                    System.out.println("Votre liste de courses est vide.");
                 } else {
-                    groceryList.forEach((item, qty) -> System.out.println(item + "," + qty));
+                    categorizedGroceryList.forEach((cat, items) -> {
+                        System.out.println("#" + cat + ":");
+                        items.forEach((item, qty) -> System.out.println(item + "," + qty));
+                    });
                 }
                 return 0;
             }
@@ -97,67 +106,137 @@ public class Main {
                     return 1;
                 }
                 String itemName = positionalArgs.get(1);
-                groceryList.remove(itemName);
-                saveGroceryList(fileName, groceryList, format);
+                // suppr l'item dans sa categorie specifiée
+                Map<String, Integer> categoryItems = categorizedGroceryList.get(category);
+                if (categoryItems != null) {
+                    categoryItems.remove(itemName);
+                    // Si la catégorie est vide, la supprimer
+                    if (categoryItems.isEmpty()) {
+                        categorizedGroceryList.remove(category);
+                    }
+                }
+                saveCategorizedGroceryList(fileName, categorizedGroceryList, format);
                 return 0;
             }
             // clear pour effacer toute la liste de course
             case "clear" -> {
-                groceryList.clear();
-                saveGroceryList(fileName, groceryList, format);
+                categorizedGroceryList.clear();
+                saveCategorizedGroceryList(fileName, categorizedGroceryList, format);
                 return 0;
             }
             default -> {
-                System.err.println("Unknown command: " + command);
+                System.err.println("Commande inconnue: " + command);
                 return 1;
             }
         }
     }
 
-    // charge la liste depuis un json
-
-    private static Map<String, Integer> loadGroceryListFromJSON(String fileName) throws IOException {
+    // charge la liste depuis un json avec catégories
+    private static Map<String, Map<String, Integer>> loadCategorizedGroceryListFromJSON(String fileName)
+            throws IOException {
         Path filePath = Paths.get(fileName);
         if (Files.exists(filePath)) {
             String fileContent = Files.readString(filePath);
-            return OBJECT_MAPPER.readValue(fileContent, new TypeReference<>() {
-            });
+            try {
+                // recharger la structure aavec categorie
+                return OBJECT_MAPPER.readValue(fileContent, new TypeReference<Map<String, Map<String, Integer>>>() {
+                });
+            } catch (Exception e) {
+                // si ça marche pas on convertie
+                try {
+                    Map<String, Integer> oldFormat = OBJECT_MAPPER.readValue(fileContent,
+                            new TypeReference<Map<String, Integer>>() {
+                            });
+                    Map<String, Map<String, Integer>> newFormat = new HashMap<>();
+                    newFormat.put("default", oldFormat);
+                    return newFormat;
+                } catch (Exception ex) {
+                    // si les deux marche pas retourne une liste vide
+                    return new HashMap<>();
+                }
+            }
         }
         return new HashMap<>();
     }
 
-    // charge la liste depuis un csv
-    private static Map<String, Integer> loadGroceryListFromCSV(String fileName) throws IOException {
+    // charge la liste depuis un csv avec categorie
+    private static Map<String, Map<String, Integer>> loadCategorizedGroceryListFromCSV(String fileName)
+            throws IOException {
         Path filePath = Paths.get(fileName);
         if (!Files.exists(filePath)) {
             return new HashMap<>();
         }
+
+        Map<String, Map<String, Integer>> categorizedList = new HashMap<>();
         List<String> lines = Files.readAllLines(filePath);
-        return lines.stream().skip(1).map(line -> line.split(","))
-                .collect(Collectors.toMap(parts -> parts[0], parts -> Integer.parseInt(parts[1])));
+
+        if (lines.isEmpty()) {
+            return categorizedList;
+        }
+
+        // bon format ?
+        String header = lines.get(0);
+        if (header.startsWith("Category,")) {
+            // new format avec categorie
+            for (int i = 1; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(",");
+                if (parts.length >= 3) {
+                    String category = parts[0];
+                    String item = parts[1];
+                    int quantity = Integer.parseInt(parts[2]);
+
+                    categorizedList.computeIfAbsent(category, k -> new HashMap<>())
+                            .put(item, quantity);
+                }
+            }
+        } else {
+            // format sans categorie
+            Map<String, Integer> defaultCategory = new HashMap<>();
+            for (int i = 1; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(",");
+                if (parts.length >= 2) {
+                    String item = parts[0];
+                    int quantity = Integer.parseInt(parts[1]);
+                    defaultCategory.put(item, quantity);
+                }
+            }
+            if (!defaultCategory.isEmpty()) {
+                categorizedList.put("default", defaultCategory);
+            }
+        }
+
+        return categorizedList;
     }
 
-    // sauvegarde soit en json, soit en csv
-    private static void saveGroceryList(String fileName, Map<String, Integer> groceryList, String format)
+    // sauvegarde soit en json, soit en csv avec categorie
+    private static void saveCategorizedGroceryList(String fileName,
+            Map<String, Map<String, Integer>> categorizedGroceryList, String format)
             throws IOException {
         if (format.equals("csv")) {
-            saveGroceryListToCSV(fileName, groceryList);
+            saveCategorizedGroceryListToCSV(fileName, categorizedGroceryList);
         } else {
-            saveGroceryListToJSON(fileName, groceryList);
+            saveCategorizedGroceryListToJSON(fileName, categorizedGroceryList);
         }
     }
 
-    // sauvegarde json
-    private static void saveGroceryListToJSON(String fileName, Map<String, Integer> groceryList) throws IOException {
-        OBJECT_MAPPER.writeValue(new File(fileName), groceryList);
+    // sauvegarde json avec categorie
+    private static void saveCategorizedGroceryListToJSON(String fileName,
+            Map<String, Map<String, Integer>> categorizedGroceryList) throws IOException {
+        OBJECT_MAPPER.writeValue(new File(fileName), categorizedGroceryList);
     }
 
-    // sauvegarde csv
-    private static void saveGroceryListToCSV(String fileName, Map<String, Integer> groceryList) throws IOException {
+    // sauvegarde csv avec categorie
+    private static void saveCategorizedGroceryListToCSV(String fileName,
+            Map<String, Map<String, Integer>> categorizedGroceryList) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName))) {
-            writer.write("Item,Quantity\n");
-            for (var entry : groceryList.entrySet()) {
-                writer.write(entry.getKey() + "," + entry.getValue() + "\n");
+            writer.write("Category,Item,Quantity\n");
+            for (var categoryEntry : categorizedGroceryList.entrySet()) {
+                String category = categoryEntry.getKey();
+                Map<String, Integer> items = categoryEntry.getValue();
+
+                for (var itemEntry : items.entrySet()) {
+                    writer.write(category + "," + itemEntry.getKey() + "," + itemEntry.getValue() + "\n");
+                }
             }
         }
     }
