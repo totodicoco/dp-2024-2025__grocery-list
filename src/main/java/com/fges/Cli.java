@@ -12,7 +12,9 @@ public class Cli {
     public List<String> command;
 
     public Cli(){
-        //Nothing to add here
+        // Nothing to add here
+        // Est ce que cette classe viole le le principe de responsabilité unique ? OUI car ça store les arguments et ça les formattent aussi?! Mais je suis FATIGUÉ et c'est DIFFICILE ce cours mais J'ADORE.
+        // Après j'ai fais un truc banger pour le DAO groceries donc je vais me poser pour l'instant.
     }
 
     public void run(String[] args) throws ParseException, Exception{
@@ -23,6 +25,7 @@ public class Cli {
         cliOptions.addOption("f", "format", true, "Format de stockage: json ou csv (défaut: json)");
 
         CommandLine cmd;
+        // Parse the command line options
         try {
             cmd = parser.parse(cliOptions, args);
             this.category = cmd.getOptionValue("category", "default");
@@ -32,7 +35,7 @@ public class Cli {
             throw new ParseException("Fail to parse arguments: " + ex.getMessage());
         }
 
-        // extension csv ou json si nécessaire
+        // Add file extension if not present
         if ("csv".equalsIgnoreCase(this.format) && !this.fileName.endsWith(".csv")) {
             this.fileName += ".csv";
         } else if ("json".equalsIgnoreCase(this.format) && !this.fileName.endsWith(".json")) {

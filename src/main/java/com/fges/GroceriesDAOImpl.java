@@ -28,10 +28,12 @@ public abstract class GroceriesDAOImpl implements GroceriesDAO{
         if (categorizedGroceryList.isEmpty()) {
             System.out.println("Votre liste de courses est vide.");
         } else {
+            StringBuilder listOutput = new StringBuilder();
             categorizedGroceryList.forEach((cat, items) -> {
-                System.out.println("#" + cat + ":");
-                items.forEach((item, qty) -> System.out.println(item + "," + qty));
+                listOutput.append("#").append(cat).append(":\n");
+                items.forEach((item, qty) -> listOutput.append(item).append(": ").append(qty).append("\n"));
             });
+            System.out.println(listOutput);
         }
         saveCategorizedGroceryList(categorizedGroceryList);
     }
