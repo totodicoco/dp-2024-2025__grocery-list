@@ -2,6 +2,7 @@ package com.fges;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fges.temp.JsonGroceriesDAOImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +42,7 @@ public class CsvGroceriesDAOImplTest {
     void should_add_entry_when_list_empty() throws IOException {
         var groceriesDao = new JsonGroceriesDAOImpl(CSV_FILE, OBJECT_MAPPER);
         groceriesDao.add("Banana", 3, "Fruits");
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
 //        print articles
         System.out.println("PIPIPIPIPI" + articles);
         // Assert that the items were added correctly
@@ -54,7 +55,7 @@ public class CsvGroceriesDAOImplTest {
         var groceriesDao = new JsonGroceriesDAOImpl(CSV_FILE, OBJECT_MAPPER);
         groceriesDao.add("Banana", 3, "Fruits");
         groceriesDao.add("Banana", 2, "Fruits");
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were added correctly
         assertEquals(1, articles.size());
         assertEquals(5, articles.get("Fruits").get("Banana"));
@@ -65,7 +66,7 @@ public class CsvGroceriesDAOImplTest {
         var groceriesDao = new JsonGroceriesDAOImpl(CSV_FILE, OBJECT_MAPPER);
         groceriesDao.add("Banana", 3, "Fruits");
         groceriesDao.add("Apple", 2, "Fruits");
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were added correctly
         assertEquals(1, articles.size());
         assertEquals(3, articles.get("Fruits").get("Banana"));
@@ -77,7 +78,7 @@ public class CsvGroceriesDAOImplTest {
         var groceriesDao = new JsonGroceriesDAOImpl(CSV_FILE, OBJECT_MAPPER);
         groceriesDao.add("Banana", 3, "Fruits");
         groceriesDao.add("Carrot", 2, "Vegetables");
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were added correctly
         assertEquals(2, articles.size());
         assertEquals(3, articles.get("Fruits").get("Banana"));
@@ -89,7 +90,7 @@ public class CsvGroceriesDAOImplTest {
         var groceriesDao = new JsonGroceriesDAOImpl(CSV_FILE, OBJECT_MAPPER);
         groceriesDao.add("Banana", 3, "Fruits");
         groceriesDao.add("Banana", 2, "Vegetables");
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were added correctly
         assertEquals(2, articles.size());
         assertEquals(3, articles.get("Fruits").get("Banana"));
@@ -101,7 +102,7 @@ public class CsvGroceriesDAOImplTest {
         var groceriesDao = new JsonGroceriesDAOImpl(CSV_FILE, OBJECT_MAPPER);
         groceriesDao.add("Banana", 3, "Fruits");
         groceriesDao.add("Carrot", 2, "Vegetables");
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were added correctly
         assertEquals(2, articles.size());
         assertEquals(3, articles.get("Fruits").get("Banana"));
@@ -155,7 +156,7 @@ public class CsvGroceriesDAOImplTest {
         groceriesDao.add("Banana", 3, "Fruits");
         groceriesDao.add("Apple", 2, "Fruits");
         groceriesDao.remove("Banana", "Fruits");
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were removed correctly
         assertEquals(1, articles.size());
         // Assert that the item was removed
@@ -167,7 +168,7 @@ public class CsvGroceriesDAOImplTest {
         var groceriesDao = new JsonGroceriesDAOImpl(CSV_FILE, OBJECT_MAPPER);
         groceriesDao.add("Banana", 3, "Fruits");
         groceriesDao.remove("Banana", "Fruits");
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were removed correctly
         assertEquals(0, articles.size());
     }
@@ -181,7 +182,7 @@ public class CsvGroceriesDAOImplTest {
     void should_clear_empty_list() throws IOException {
         var groceriesDao = new JsonGroceriesDAOImpl(CSV_FILE, OBJECT_MAPPER);
         groceriesDao.clear();
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were cleared correctly
         assertEquals(0, articles.size());
     }
@@ -193,7 +194,7 @@ public class CsvGroceriesDAOImplTest {
         groceriesDao.add("Apple", 2, "Fruits");
         groceriesDao.add("Carrot", 2, "Vegetables");
         groceriesDao.clear();
-        Map<String, Map<String, Integer>> articles = groceriesDao.loadCategorizedGroceryList();
+        Map<String, Map<String, Integer>> articles = groceriesDao.loadGroceryList();
         // Assert that the items were cleared correctly
         assertEquals(0, articles.size());
     }

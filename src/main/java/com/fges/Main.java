@@ -1,15 +1,15 @@
 package com.fges;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fges.groceriesDAO.*;
+import com.fges.modules.*;
+import com.fges.services.*;
+
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.*;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -42,17 +42,18 @@ public class Main {
         List<String> positionalArgs = cli.command;
         String command = positionalArgs.get(0);
 
-        // Create the DAO corresponding to the file format
-        GroceriesDAOImpl groceriesDao;
-        switch (cli.format){
-            case "json" -> {
-                groceriesDao = new JsonGroceriesDAOImpl(cli.fileName, OBJECT_MAPPER);
-            }
-            case "csv" -> {
-                groceriesDao = new CsvGroceriesDAOImpl(cli.fileName, OBJECT_MAPPER);
-            }
+        //print format and filename
+        System.out.println("Format: " + cli.format);
+        System.out.println("Filename: " + cli.fileName);
+
+        // DAO to use depending on format
+        GroceriesDAO groceriesDAO;
+        switch (cli.format) {
+            case "json" -> groceriesDAO = new GroceriesDAOImplJson(cli.fileName, OBJECT_MAPPER);
+            case "csv" -> groceriesDAO = new GroceriesDAOImplCsv(cli.fileName, OBJECT_MAPPER);
             default -> {
-                groceriesDao = new JsonGroceriesDAOImpl(cli.fileName, OBJECT_MAPPER);
+                System.err.println("Format non supporté: " + cli.format);
+                return 1;
             }
         }
 
@@ -60,7 +61,7 @@ public class Main {
         switch (command) {
             case "add" -> {
                 if (positionalArgs.size() < 3) {
-                    System.err.println("Usage: add <item> <quantity> [<category>]");
+                    System.err.println("Usage: add <item> <quantity>");
                     return 1;
                 }
                 String itemName = positionalArgs.get(1);
@@ -72,26 +73,33 @@ public class Main {
                     return 1;
                 }
                 String category = cli.category;
-                groceriesDao.add(itemName, quantity, category);
+
+                // Create an instance of AddService and call the add method
+                AddService addService = new AddService(groceriesDAO);
+                addService.add(itemName, quantity, category);
+
                 return 0;
             }
             case "list" -> {
-                groceriesDao.list();
+                ListService listService = new ListService(groceriesDAO);
+                listService.list();
                 return 0;
             }
             case "remove" -> {
                 if (positionalArgs.size() < 2) {
-                    System.err.println("Usage: remove <item> [<category>]");
+                    System.err.println("Usage: remove <item>");
                     return 1;
                 }
                 String itemName = positionalArgs.get(1);
                 String category = cli.category;
-                groceriesDao.remove(itemName, category);
+                RemoveService removeService = new RemoveService(groceriesDAO);
+                removeService.remove(itemName, 1, category);
                 return 0;
             }
             // clear pour effacer toute la liste de course
             case "clear" -> {
-                groceriesDao.clear();
+                ClearService clearService = new ClearService(groceriesDAO);
+                clearService.clear();
                 return 0;
             }
             default -> {

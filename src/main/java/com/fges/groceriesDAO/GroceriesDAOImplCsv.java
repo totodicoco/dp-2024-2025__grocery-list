@@ -1,10 +1,9 @@
-package com.fges;
+package com.fges.groceriesDAO;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fges.modules.GroceryList;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,16 +12,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CsvGroceriesDAOImpl extends GroceriesDAOImpl{
+public class GroceriesDAOImplCsv implements GroceriesDAO{
+    private final String fileName;
+    private final ObjectMapper OBJECT_MAPPER;
 
-    public CsvGroceriesDAOImpl(String fileName, ObjectMapper OBJECT_MAPPER) throws IOException {
-        super(fileName, OBJECT_MAPPER);
+    public GroceriesDAOImplCsv(String fileName, ObjectMapper OBJECT_MAPPER) throws IOException {
+        this.fileName = fileName;
+        this.OBJECT_MAPPER = OBJECT_MAPPER;
     }
-    @Override
-    protected void saveCategorizedGroceryList(Map<String, Map<String, Integer>> categorizedGroceryList) throws IOException {
+
+    public void saveGroceryList(GroceryList groceryList) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName))) {
             writer.write("Category,Item,Quantity\n");
-            for (var categoryEntry : categorizedGroceryList.entrySet()) {
+            for (var categoryEntry : groceryList.getGroceryList().entrySet()) {
                 String category = categoryEntry.getKey();
                 Map<String, Integer> items = categoryEntry.getValue();
 
@@ -33,18 +35,17 @@ public class CsvGroceriesDAOImpl extends GroceriesDAOImpl{
         }
     }
 
-    @Override
-    protected Map<String, Map<String, Integer>> loadCategorizedGroceryList() throws IOException{
+    public GroceryList loadGroceryList() throws IOException {
         Path filePath = Paths.get(fileName);
         if (!Files.exists(filePath)) {
-            return new HashMap<>();
+            return GroceryList.fromMap(new HashMap<>());
         }
 
         Map<String, Map<String, Integer>> categorizedList = new HashMap<>();
         List<String> lines = Files.readAllLines(filePath);
 
         if (lines.isEmpty()) {
-            return categorizedList;
+            return GroceryList.fromMap(categorizedList);
         }
 
         // bon format ?
@@ -59,25 +60,11 @@ public class CsvGroceriesDAOImpl extends GroceriesDAOImpl{
                     int quantity = Integer.parseInt(parts[2]);
 
                     categorizedList.computeIfAbsent(category, k -> new HashMap<>())
-                            .put(item, quantity);
+                            .put(item, categorizedList.getOrDefault(category, new HashMap<>())
+                                    .getOrDefault(item, 0) + quantity);
                 }
-            }
-        } else {
-            // format sans categorie
-            Map<String, Integer> defaultCategory = new HashMap<>();
-            for (int i = 1; i < lines.size(); i++) {
-                String[] parts = lines.get(i).split(",");
-                if (parts.length >= 2) {
-                    String item = parts[0];
-                    int quantity = Integer.parseInt(parts[1]);
-                    defaultCategory.put(item, quantity);
-                }
-            }
-            if (!defaultCategory.isEmpty()) {
-                categorizedList.put("default", defaultCategory);
             }
         }
-
-        return categorizedList;
+        return GroceryList.fromMap(categorizedList);
     }
 }

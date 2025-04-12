@@ -28,9 +28,20 @@ public class Cli {
         // Parse the command line options
         try {
             cmd = parser.parse(cliOptions, args);
-            this.category = cmd.getOptionValue("category", "default");
+            this.category = cmd.getOptionValue("c", "default");
             this.fileName = cmd.getOptionValue("s");
-            this.format = cmd.getOptionValue("f", "json");
+            this.format = cmd.getOptionValue("f");
+
+            // Determine format based on file extension if not provided
+            if (this.format == null) {
+                if (this.fileName.endsWith(".csv")) {
+                    this.format = "csv";
+                } else if (this.fileName.endsWith(".json")) {
+                    this.format = "json";
+                } else {
+                    this.format = "json"; // Default to json
+                }
+            }
         } catch (ParseException ex) {
             throw new ParseException("Fail to parse arguments: " + ex.getMessage());
         }
