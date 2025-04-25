@@ -12,6 +12,15 @@ public class AddService {
         this.groceriesDAO = groceriesDAO;
     }
 
+    /**
+     * Adds an item to the grocery list in the groceriesDAO.
+     *
+     * @param itemName the name of the item to add
+     * @param quantity the quantity of the item to add
+     * @param category the category of the item
+     * @return true if the item was added successfully, false otherwise
+     * @throws IOException if there is an error saving the grocery list
+     */
     public Boolean add(String itemName, int quantity, String category) throws IOException {
         Boolean success = false;
 

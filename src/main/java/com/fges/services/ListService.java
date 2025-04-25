@@ -7,12 +7,18 @@ import java.util.Map;
 
 public class ListService {
 
-    private final GroceriesDAO groceriesDAO;;
+    private final GroceriesDAO groceriesDAO;
 
     public ListService(GroceriesDAO groceriesDAO) {
         this.groceriesDAO = groceriesDAO;
     }
 
+    /**
+     * Lists the items in the grocery list in the groceriesDAO.
+     *
+     * @return true if the grocery list was listed successfully, false otherwise
+     * @throws IOException if there is an error loading the grocery list
+     */
     public Boolean list() throws IOException{
         boolean success = false;
 

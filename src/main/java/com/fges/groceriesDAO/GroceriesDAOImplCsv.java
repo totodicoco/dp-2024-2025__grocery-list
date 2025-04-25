@@ -16,11 +16,17 @@ public class GroceriesDAOImplCsv implements GroceriesDAO{
     private final String fileName;
     private final ObjectMapper OBJECT_MAPPER;
 
-    public GroceriesDAOImplCsv(String fileName, ObjectMapper OBJECT_MAPPER) throws IOException {
+    public GroceriesDAOImplCsv(String fileName, ObjectMapper OBJECT_MAPPER){
         this.fileName = fileName;
         this.OBJECT_MAPPER = OBJECT_MAPPER;
     }
 
+    /**
+     * Save the grocery list to a CSV file.
+     *
+     * @param groceryList The grocery list to save.
+     * @throws IOException If an I/O error occurs.
+     */
     public void saveGroceryList(GroceryList groceryList) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName))) {
             writer.write("Category,Item,Quantity\n");
@@ -35,6 +41,12 @@ public class GroceriesDAOImplCsv implements GroceriesDAO{
         }
     }
 
+    /**
+     * Load the grocery list from a CSV file.
+     *
+     * @return The loaded grocery list.
+     * @throws IOException If an I/O error occurs.
+     */
     public GroceryList loadGroceryList() throws IOException {
         Path filePath = Paths.get(fileName);
         if (!Files.exists(filePath)) {

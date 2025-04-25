@@ -21,16 +21,29 @@ public class GroceriesDAOImplJson implements GroceriesDAO{
         this.OBJECT_MAPPER = OBJECT_MAPPER;
     }
 
+    /**
+     * Save the grocery list to a JSON file.
+     *
+     * @param groceryList The grocery list to save.
+     * @throws IOException If an I/O error occurs.
+     */
     public void saveGroceryList(GroceryList groceryList) throws IOException{
         OBJECT_MAPPER.writeValue(new File(fileName), groceryList.getGroceryList());
     }
+
+    /**
+     * Load the grocery list from a JSON file.
+     *
+     * @return The loaded grocery list.
+     * @throws IOException If an I/O error occurs.
+     */
     public GroceryList loadGroceryList() throws IOException{
         Path filePath = Paths.get(fileName);
         if (Files.exists(filePath)) {
             String fileContent = Files.readString(filePath);
             try {
                 // Load the structure with categories
-                Map<String, Map<String, Integer>> groceries = OBJECT_MAPPER.readValue(fileContent, new TypeReference<Map<String, Map<String, Integer>>>() {
+                Map<String, Map<String, Integer>> groceries = OBJECT_MAPPER.readValue(fileContent, new TypeReference<>() {
                 });
                 return GroceryList.fromMap(groceries);
             }

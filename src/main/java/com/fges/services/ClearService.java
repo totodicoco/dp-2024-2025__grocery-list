@@ -10,6 +10,12 @@ public class ClearService {
         this.groceriesDAO = groceriesDAO;
     }
 
+    /**
+     * Clears the grocery list in the groceriesDAO.
+     *
+     * @return true if the grocery list was cleared successfully, false otherwise
+     * @throws IOException if there is an error saving the grocery list
+     */
     public Boolean clear() throws IOException {
         Boolean success = false;
 
