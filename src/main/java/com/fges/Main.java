@@ -93,7 +93,7 @@ public class Main {
                 String itemName = positionalArgs.get(1);
                 String category = cli.category;
                 RemoveService removeService = new RemoveService(groceriesDAO);
-                removeService.remove(itemName, 1, category);
+                removeService.remove(itemName, category);
                 return 0;
             }
             // clear pour effacer toute la liste de course
