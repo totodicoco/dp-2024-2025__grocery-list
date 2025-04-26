@@ -1,6 +1,5 @@
 package com.fges.groceriesDAO;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fges.modules.GroceryList;
 
 import java.io.BufferedWriter;
@@ -14,11 +13,9 @@ import java.util.Map;
 
 public class GroceriesDAOImplCsv implements GroceriesDAO{
     private final String fileName;
-    private final ObjectMapper OBJECT_MAPPER;
 
-    public GroceriesDAOImplCsv(String fileName, ObjectMapper OBJECT_MAPPER){
+    public GroceriesDAOImplCsv(String fileName){
         this.fileName = fileName;
-        this.OBJECT_MAPPER = OBJECT_MAPPER;
     }
 
     /**
@@ -27,6 +24,7 @@ public class GroceriesDAOImplCsv implements GroceriesDAO{
      * @param groceryList The grocery list to save.
      * @throws IOException If an I/O error occurs.
      */
+    @Override
     public void saveGroceryList(GroceryList groceryList) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName))) {
             writer.write("Category,Item,Quantity\n");
@@ -47,6 +45,7 @@ public class GroceriesDAOImplCsv implements GroceriesDAO{
      * @return The loaded grocery list.
      * @throws IOException If an I/O error occurs.
      */
+    @Override
     public GroceryList loadGroceryList() throws IOException {
         Path filePath = Paths.get(fileName);
         if (!Files.exists(filePath)) {
@@ -78,5 +77,10 @@ public class GroceriesDAOImplCsv implements GroceriesDAO{
             }
         }
         return GroceryList.fromMap(categorizedList);
+    }
+
+    @Override
+    public String getFilename(){
+        return fileName;
     }
 }

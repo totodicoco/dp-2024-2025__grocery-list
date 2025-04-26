@@ -1,9 +1,7 @@
 package com.fges.commands;
 
-import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.services.InfoService;
 
-import java.io.IOException;
 import java.util.List;
 
 public class InfoCommand implements Command {
@@ -12,13 +10,16 @@ public class InfoCommand implements Command {
     public InfoCommand(List<String> args) {
         this.args = args;
     }
+
+    @Override
     public void validateArgs() {
         if (args.size() != 1) {
             throw new IllegalArgumentException("list does not take any arguments");
         }
     }
 
-    public void execute() throws IOException {
+    @Override
+    public void execute(){
         InfoService infoService = new InfoService();
         infoService.info();
     }

@@ -16,7 +16,6 @@ public class RemoveService {
      * Removes an item from the grocery list in the groceriesDAO.
      *
      * @param itemName the name of the item to remove
-     * @param quantity the quantity of the item to remove
      * @param category the category of the item
      * @return true if the item was removed successfully, false otherwise
      * @throws IOException if there is an error saving the grocery list
@@ -26,12 +25,13 @@ public class RemoveService {
 
         GroceryList groceryList = groceriesDAO.loadGroceryList();
         Map<String, Integer> categoryItems = groceryList.getCategoryItems(category);
-        if (categoryItems != null) {
-            categoryItems.remove(itemName);
-            // If the category is empty after removing the item, remove the category from the grocery list
-            if (categoryItems.isEmpty()) {
-                groceryList.getGroceryList().remove(category);
-            }
+        if (categoryItems == null){
+            throw new IOException("Category not found: " + category);
+        }
+        categoryItems.remove(itemName);
+        // If the category is empty after removing the item, remove the category from the grocery list
+        if (categoryItems.isEmpty()) {
+            groceryList.getGroceryList().remove(category);
         }
         groceriesDAO.saveGroceryList(groceryList);
 

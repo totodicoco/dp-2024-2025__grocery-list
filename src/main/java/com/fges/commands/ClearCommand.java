@@ -15,12 +15,17 @@ public class ClearCommand implements Command {
         this.groceriesDAO = groceriesDAO;
     }
 
+    @Override
     public void validateArgs() {
         if (args.size() != 1) {
             throw new IllegalArgumentException("clear does not take any arguments");
         }
+        if (groceriesDAO.getFilename() == null) {
+            throw new IllegalArgumentException("No filename provided. Use -s <filename> to set the filename.");
+        }
     }
 
+    @Override
     public void execute() throws IOException {
         ClearService clearService = new ClearService(groceriesDAO);
         clearService.clear();
