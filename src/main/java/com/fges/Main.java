@@ -1,8 +1,8 @@
 package com.fges;
 
 import com.fges.groceriesDAO.*;
-import com.fges.modules.*;
 import com.fges.services.*;
+import com.fges.commands.*;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +24,7 @@ public class Main {
     }
 
     public static int exec(String[] args) throws IOException {
-        // def options de la ligne de commande
+        // Defines the options for the command line
         Cli cli = new Cli();
         try {
             cli.run(args);
@@ -38,14 +38,6 @@ public class Main {
             return 1;
         }
 
-        // la commande à exécuter
-        List<String> positionalArgs = cli.command;
-        String command = positionalArgs.get(0);
-
-        //print format and filename
-        System.out.println("Format: " + cli.format);
-        System.out.println("Filename: " + cli.fileName);
-
         // DAO to use depending on format
         GroceriesDAO groceriesDAO;
         switch (cli.format) {
@@ -57,55 +49,19 @@ public class Main {
             }
         }
 
-        // les commandes qui s'executent
-        switch (command) {
-            case "add" -> {
-                if (positionalArgs.size() < 3) {
-                    System.err.println("Usage: add <item> <quantity>");
-                    return 1;
-                }
-                String itemName = positionalArgs.get(1);
-                int quantity;
-                try {
-                    quantity = Integer.parseInt(positionalArgs.get(2));
-                } catch (NumberFormatException e) {
-                    System.err.println("La quantité doit être un entier");
-                    return 1;
-                }
-                String category = cli.category;
+        // Command to use depending on the command line
+        CommandFactory commandFactory = new CommandFactory(groceriesDAO, cli.category);
+        List<String> positionalArgs = cli.command;
+        Command command = commandFactory.getCommand(positionalArgs);
 
-                // Create an instance of AddService and call the add method
-                AddService addService = new AddService(groceriesDAO);
-                addService.add(itemName, quantity, category);
-
-                return 0;
-            }
-            case "list" -> {
-                ListService listService = new ListService(groceriesDAO);
-                listService.list();
-                return 0;
-            }
-            case "remove" -> {
-                if (positionalArgs.size() < 2) {
-                    System.err.println("Usage: remove <item>");
-                    return 1;
-                }
-                String itemName = positionalArgs.get(1);
-                String category = cli.category;
-                RemoveService removeService = new RemoveService(groceriesDAO);
-                removeService.remove(itemName, category);
-                return 0;
-            }
-            // clear pour effacer toute la liste de course
-            case "clear" -> {
-                ClearService clearService = new ClearService(groceriesDAO);
-                clearService.clear();
-                return 0;
-            }
-            default -> {
-                System.err.println("Commande inconnue: " + command);
-                return 1;
-            }
+        // Validate and execute the command
+        command.validateArgs();
+        try {
+            command.execute();
+        } catch (Exception e) {
+            System.err.println("Error while executing the command: " + e.getMessage());
+            return 1;
         }
+        return 0;
     }
 }
