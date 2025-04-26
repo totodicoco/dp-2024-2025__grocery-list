@@ -1,4 +1,4 @@
-package services;
+package com.fges.services;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -6,23 +6,22 @@ import java.time.format.DateTimeFormatter;
 public class InfoService {
 
     /**
-     * Affiche les informations système comme spécifié dans les exigences du TP3
-     * La méthode ignore tous les arguments qui pourraient être fournis
+     * Show system information as requested from TP3
      */
-    public void displayInfo() {
-        // Récupération de la date 
+    public void info() {
+        // Get today's date
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedDate = today.format(formatter);
         
-        // Récupération des informations 
+        // Get system properties
         String osName = System.getProperty("os.name");
         String javaVersion = System.getProperty("java.version");
         
-        // Affichage des informations 
-        System.out.println("=== Informations système ===");
-        System.out.println("Date: " + formattedDate);
-        System.out.println("Système d'exploitation: " + osName);
-        System.out.println("Version Java: " + javaVersion);
+        // Display system information
+        System.out.println("=== System information ===");
+        System.out.println("Today's date: " + formattedDate);
+        System.out.println("Operating System: " + osName);
+        System.out.println("Java version: " + javaVersion);
     }
 }

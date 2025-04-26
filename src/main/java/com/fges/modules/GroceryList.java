@@ -46,6 +46,9 @@ public class GroceryList {
         return groceryList.get(category).get(item);
     }
 
+    /**
+     * If for some reason I'll need to create a grocery list with a builder, I can use this class.
+     */
     public static class Builder{
         private final Map<String, Map<String, Integer>> groceryList = new HashMap<>();
 
