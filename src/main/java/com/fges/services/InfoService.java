@@ -1,5 +1,7 @@
 package com.fges.services;
 
+import com.fges.services.DTO.InfoDTO;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -8,7 +10,7 @@ public class InfoService {
     /**
      * Show system information as requested from TP3
      */
-    public void info() {
+    public void info(InfoDTO infoDTO) {
         // Get today's date
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

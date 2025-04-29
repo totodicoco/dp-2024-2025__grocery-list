@@ -3,6 +3,7 @@ package com.fges.commands;
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.groceriesDAO.GroceriesDAOFactory;
 import com.fges.modules.OptionsUsed;
+import com.fges.services.DTO.ListDTO;
 import com.fges.services.ListService;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class ListCommand implements Command {
         GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
         GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
         ListService listService = new ListService(groceriesDAO);
-        listService.list();
+        ListDTO listDTO = new ListDTO();
+        listService.list(listDTO);
     }
 }

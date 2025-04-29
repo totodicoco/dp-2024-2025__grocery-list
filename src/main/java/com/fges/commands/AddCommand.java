@@ -4,6 +4,7 @@ import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.groceriesDAO.GroceriesDAOFactory;
 import com.fges.services.AddService;
 import com.fges.modules.OptionsUsed;
+import com.fges.services.DTO.AddDTO;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,6 +41,7 @@ public class AddCommand implements Command {
         GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
         int quantity = Integer.parseInt(args.get(2));
         AddService addService = new AddService(groceriesDAO);
-        addService.add(itemName, quantity, optionsUsed.getCategory());
+        AddDTO addDTO = new AddDTO(itemName, quantity, optionsUsed.getCategory());
+        addService.add(addDTO);
     }
 }

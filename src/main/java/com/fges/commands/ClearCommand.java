@@ -4,6 +4,7 @@ import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.groceriesDAO.GroceriesDAOFactory;
 import com.fges.modules.OptionsUsed;
 import com.fges.services.ClearService;
+import com.fges.services.DTO.ClearDTO;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +33,7 @@ public class ClearCommand implements Command {
         GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
         GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
         ClearService clearService = new ClearService(groceriesDAO);
-        clearService.clear();
+        ClearDTO clearDTO = new ClearDTO();
+        clearService.clear(clearDTO);
     }
 }

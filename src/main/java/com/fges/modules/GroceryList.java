@@ -1,7 +1,9 @@
 package com.fges.modules;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GroceryList {
     private final Map<String, Map<String, Integer>> groceryList;
@@ -44,6 +46,17 @@ public class GroceryList {
      */
     public Integer getItemQuantity(String category, String item) {
         return groceryList.get(category).get(item);
+    }
+
+    /**
+     * This method is used to get all categories that contain a specific item.
+     * It returns a list of categories that contain the specified item.
+     */
+    public List<String> getAllCategoriesWithItem(String item) {
+        return groceryList.entrySet().stream()
+                .filter(entry -> entry.getValue().containsKey(item))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     /**

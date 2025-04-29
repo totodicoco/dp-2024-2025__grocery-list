@@ -3,6 +3,7 @@ package com.fges.commands;
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.groceriesDAO.GroceriesDAOFactory;
 import com.fges.modules.OptionsUsed;
+import com.fges.services.DTO.RemoveDTO;
 import com.fges.services.RemoveService;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class RemoveCommand implements Command {
         GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
         GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
         RemoveService removeService = new RemoveService(groceriesDAO);
-        removeService.remove(itemName, optionsUsed.getCategory());
+        RemoveDTO removeDTO = new RemoveDTO(itemName, 0);
+        removeService.remove(removeDTO);
     }
 }

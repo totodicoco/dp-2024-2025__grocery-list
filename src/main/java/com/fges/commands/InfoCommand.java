@@ -1,5 +1,6 @@
 package com.fges.commands;
 
+import com.fges.services.DTO.InfoDTO;
 import com.fges.services.InfoService;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class InfoCommand implements Command {
     @Override
     public void execute(){
         InfoService infoService = new InfoService();
-        infoService.info();
+        InfoDTO infoDTO = new InfoDTO();
+        infoService.info(infoDTO);
     }
 }

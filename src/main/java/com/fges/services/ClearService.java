@@ -1,6 +1,7 @@
 package com.fges.services;
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.modules.GroceryList;
+import com.fges.services.DTO.ClearDTO;
 
 import java.io.IOException;
 public class ClearService {
@@ -16,7 +17,7 @@ public class ClearService {
      * @return true if the grocery list was cleared successfully, false otherwise
      * @throws IOException if there is an error saving the grocery list
      */
-    public Boolean clear() throws IOException {
+    public Boolean clear(ClearDTO clearDTO) throws IOException {
         Boolean success = false;
 
         GroceryList groceryList = groceriesDAO.loadGroceryList();
