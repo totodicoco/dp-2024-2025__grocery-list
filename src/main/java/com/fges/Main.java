@@ -1,15 +1,11 @@
 package com.fges;
 
 import com.fges.commands.*;
-
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.*;
 
 import java.io.*;
 
 public class Main {
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static void main(String[] args) throws IOException{
         System.exit(exec(args));
@@ -18,7 +14,7 @@ public class Main {
     public static int exec(String[] args) throws IOException {
         try{
             CommandFactory commandFactory = new CommandFactory(args);
-            Command command = commandFactory.getCommand(OBJECT_MAPPER);
+            Command command = commandFactory.getCommand();
             command.validateArgs();
             command.execute();
         }

@@ -1,6 +1,8 @@
 package com.fges.commands;
 
 import com.fges.groceriesDAO.GroceriesDAO;
+import com.fges.groceriesDAO.GroceriesDAOFactory;
+import com.fges.modules.OptionsUsed;
 import com.fges.services.RemoveService;
 
 import java.io.IOException;
@@ -8,13 +10,11 @@ import java.util.List;
 
 public class RemoveCommand implements Command {
     private final List<String> args;
-    private final GroceriesDAO groceriesDAO;
-    private final String category;
+    private final OptionsUsed optionsUsed;
 
-    public RemoveCommand(List<String> args, GroceriesDAO groceriesDAO, String category) {
+    public RemoveCommand(List<String> args, OptionsUsed optionsUsed) {
         this.args = args;
-        this.groceriesDAO = groceriesDAO;
-        this.category = category;
+        this.optionsUsed = optionsUsed;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class RemoveCommand implements Command {
         if (args.size() != 2) {
             throw new IllegalArgumentException("Usage: remove <item>");
         }
-        if (groceriesDAO.getFilename() == null) {
+        if (optionsUsed.getFilename() == null) {
             throw new IllegalArgumentException("No filename provided. Use -s <filename> to set the filename.");
         }
     }
@@ -30,7 +30,9 @@ public class RemoveCommand implements Command {
     @Override
     public void execute() throws IOException {
         String itemName = args.get(1);
+        GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
+        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
         RemoveService removeService = new RemoveService(groceriesDAO);
-        removeService.remove(itemName, category);
+        removeService.remove(itemName, optionsUsed.getCategory());
     }
 }

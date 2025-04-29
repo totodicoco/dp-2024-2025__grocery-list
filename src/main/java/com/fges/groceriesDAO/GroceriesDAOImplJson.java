@@ -14,11 +14,10 @@ import java.util.Map;
 
 public class GroceriesDAOImplJson implements GroceriesDAO{
     private final String fileName;
-    private final ObjectMapper OBJECT_MAPPER;
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public GroceriesDAOImplJson(String fileName, ObjectMapper OBJECT_MAPPER) {
+    public GroceriesDAOImplJson(String fileName) {
         this.fileName = fileName;
-        this.OBJECT_MAPPER = OBJECT_MAPPER;
     }
 
     @Override

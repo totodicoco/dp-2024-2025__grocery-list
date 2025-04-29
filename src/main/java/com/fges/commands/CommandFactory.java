@@ -1,9 +1,5 @@
 package com.fges.commands;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fges.groceriesDAO.GroceriesDAO;
-import com.fges.groceriesDAO.GroceriesDAOImplCsv;
-import com.fges.groceriesDAO.GroceriesDAOImplJson;
 import com.fges.modules.OptionsUsed;
 import org.apache.commons.cli.*;
 
@@ -31,22 +27,15 @@ public class CommandFactory {
     /**
      * Returns the command object based on the command line arguments. It also creates the appropriate DAO I guess.
      *
-     * @param OBJECT_MAPPER The ObjectMapper instance for JSON processing.
      * @return The Command object corresponding to the command line arguments.
      */
-    public Command getCommand(ObjectMapper OBJECT_MAPPER) {
-        GroceriesDAO groceriesDAO;
-        switch (optionsUsed.getFormat()) {
-            case "json" -> groceriesDAO = new GroceriesDAOImplJson(optionsUsed.getFileName(), OBJECT_MAPPER);
-            case "csv" -> groceriesDAO = new GroceriesDAOImplCsv(optionsUsed.getFileName());
-            default -> throw new IllegalArgumentException("Unknown format: " + optionsUsed.getFormat());
-        }
+    public Command getCommand() {
         String commandName = this.command.get(0);
         return switch (commandName) {
-            case "add" -> new AddCommand(this.command, groceriesDAO, optionsUsed.getCategory());
-            case "list" -> new ListCommand(this.command, groceriesDAO);
-            case "remove" -> new RemoveCommand(this.command, groceriesDAO, optionsUsed.getCategory());
-            case "clear" -> new ClearCommand(this.command, groceriesDAO);
+            case "add" -> new AddCommand(this.command, optionsUsed);
+            case "list" -> new ListCommand(this.command, optionsUsed);
+            case "remove" -> new RemoveCommand(this.command, optionsUsed);
+            case "clear" -> new ClearCommand(this.command, optionsUsed);
             case "info" -> new InfoCommand(this.command);
             default -> throw new IllegalArgumentException("Unknown command: " + commandName);
         };
