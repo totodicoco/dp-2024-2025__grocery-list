@@ -1,29 +1,20 @@
 package com.fges;
 
 import com.fges.commands.*;
-
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.*;
 
 import java.io.*;
 
 public class Main {
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public static void main(String[] args) {
-        try {
-            System.exit(exec(args));
-        } catch (IOException ex) {
-            System.err.println("Erreur de fichier: " + ex.getMessage());
-            System.exit(1);
-        }
+    public static void main(String[] args) throws IOException{
+        System.exit(exec(args));
     }
 
     public static int exec(String[] args) throws IOException {
         try{
             CommandFactory commandFactory = new CommandFactory(args);
-            Command command = commandFactory.getCommand(OBJECT_MAPPER);
+            Command command = commandFactory.getCommand();
             command.validateArgs();
             command.execute();
         }

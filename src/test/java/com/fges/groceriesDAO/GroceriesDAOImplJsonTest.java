@@ -3,9 +3,7 @@ package com.fges.groceriesDAO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fges.modules.GroceryList;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +23,7 @@ class GroceriesDAOImplJsonTest {
 
     void setUp() {
         objectMapper = mock(ObjectMapper.class);
-        groceriesDAO = new GroceriesDAOImplJson(testFileName, objectMapper);
+        groceriesDAO = new GroceriesDAOImplJson(testFileName);
     }
 
     @Test
