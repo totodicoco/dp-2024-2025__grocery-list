@@ -41,6 +41,11 @@
             <version>5.14.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>fr.anthonyquere</groupId>
+            <artifactId>grocery-web</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <properties>

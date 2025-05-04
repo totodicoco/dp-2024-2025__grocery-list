@@ -18,7 +18,6 @@ public class AddCommand implements Command {
         this.optionsUsed = optionsUsed;
     }
 
-
     @Override
     public void validateArgs() {
         if (args.size() != 3) {

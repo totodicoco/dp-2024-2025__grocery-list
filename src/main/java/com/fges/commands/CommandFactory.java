@@ -37,6 +37,7 @@ public class CommandFactory {
             case "remove" -> new RemoveCommand(this.command, optionsUsed);
             case "clear" -> new ClearCommand(this.command, optionsUsed);
             case "info" -> new InfoCommand(this.command);
+            case "web" -> new WebCommand(this.command, optionsUsed);
             default -> throw new IllegalArgumentException("Unknown command: " + commandName);
         };
     }

@@ -1,4 +1,6 @@
 package com.fges.services.DTO;
 
-public record InfoDTO(){
+import java.time.LocalDate;
+
+public record InfoDTO(LocalDate date, String osName, String javaVersion){
 }

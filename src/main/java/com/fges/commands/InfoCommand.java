@@ -3,6 +3,7 @@ package com.fges.commands;
 import com.fges.services.DTO.InfoDTO;
 import com.fges.services.InfoService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class InfoCommand implements Command {
@@ -22,7 +23,10 @@ public class InfoCommand implements Command {
     @Override
     public void execute(){
         InfoService infoService = new InfoService();
-        InfoDTO infoDTO = new InfoDTO();
+        LocalDate today = LocalDate.now();
+        String osName = System.getProperty("os.name");
+        String javaVersion = System.getProperty("java.version");
+        InfoDTO infoDTO = new InfoDTO(today, osName, javaVersion);
         infoService.info(infoDTO);
     }
 }
