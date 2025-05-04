@@ -11,21 +11,6 @@ public class InfoService {
      */
 
     public void info(InfoDTO infoDTO) {
-//        // Get today's date
-//        LocalDate today = LocalDate.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        String formattedDate = today.format(formatter);
-//
-//        // Get system properties
-//        String osName = System.getProperty("os.name");
-//        String javaVersion = System.getProperty("java.version");
-        
-        // Display system information
-//        System.out.println("=== System information ===");
-//        System.out.println("Today's date: " + formattedDate);
-//        System.out.println("Operating System: " + osName);
-//        System.out.println("Java version: " + javaVersion);
-
         // Display system information
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedDate = infoDTO.date().format(formatter);

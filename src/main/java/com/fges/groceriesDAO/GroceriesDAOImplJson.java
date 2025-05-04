@@ -42,9 +42,4 @@ public class GroceriesDAOImplJson implements GroceriesDAO{
         }
         return GroceryList.fromMap(new HashMap<>());
     }
-
-    @Override
-    public String getFilename(){
-        return fileName;
-    }
 }

@@ -20,11 +20,4 @@ public interface GroceriesDAO{
      * @throws IOException If an I/O error occurs.
      */
     GroceryList loadGroceryList() throws IOException;
-
-    /**
-     * Get the filename of the grocery list. A GroceriesDAO should always have an associated file.
-     *
-     * @return The filename of the grocery list.
-     */
-    String getFilename();
 }

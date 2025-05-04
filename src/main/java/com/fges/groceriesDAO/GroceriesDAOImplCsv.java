@@ -79,8 +79,4 @@ public class GroceriesDAOImplCsv implements GroceriesDAO{
         return GroceryList.fromMap(categorizedList);
     }
 
-    @Override
-    public String getFilename(){
-        return fileName;
-    }
 }

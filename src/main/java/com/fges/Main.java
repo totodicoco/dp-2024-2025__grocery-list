@@ -2,7 +2,6 @@ package com.fges;
 
 import com.fges.commands.*;
 import org.apache.commons.cli.*;
-
 import java.io.*;
 
 public class Main {
