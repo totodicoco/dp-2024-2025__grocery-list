@@ -41,10 +41,12 @@ public class SimpleGroceryShop implements MyGroceryShop{
     // Might as well also list in terminal? This method only seems to run when the groceries are updated or when loading the website so it should be fine
     @Override
     public List<WebGroceryItem> getGroceries() {
+        System.out.println(this.groceries);
         ListService listService = new ListService(groceriesDAO);
         ListDTO listDTO = new ListDTO();
         try {
             listService.list(listDTO);
+            reload();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,16 +81,16 @@ public class SimpleGroceryShop implements MyGroceryShop{
 
     @Override
     public Runtime getRuntime() {
-        InfoService infoService = new InfoService();
         LocalDate today = LocalDate.now();
         String osName = System.getProperty("os.name");
         String javaVersion = System.getProperty("java.version");
+        InfoService infoService = new InfoService();
         InfoDTO infoDTO = new InfoDTO(today, osName, javaVersion);
-            infoService.info(infoDTO);
+        infoService.info(infoDTO);
         return new Runtime(
-                LocalDate.now(),
-                System.getProperty("java.version"),
-                System.getProperty("os.name")
+                today,
+                javaVersion,
+                osName
         );
     }
 }
