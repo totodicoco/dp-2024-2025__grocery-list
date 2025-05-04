@@ -1,5 +1,6 @@
 package com.fges.modules;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,13 +41,6 @@ public class GroceryList {
         return groceryList.get(category);
     }
 
-    /**
-     * This method is used to get the quantity of a specific item in a specific category.
-     * It returns the quantity of the item in the specified category.
-     */
-    public Integer getItemQuantity(String category, String item) {
-        return groceryList.get(category).get(item);
-    }
 
     /**
      * This method is used to get all categories that contain a specific item.
