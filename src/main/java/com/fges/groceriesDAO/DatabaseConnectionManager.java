@@ -8,6 +8,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * This class manages the connection to a MySQL database.
+ * It checks if the database exists, creates it if it doesn't,
+ */
 public class DatabaseConnectionManager {
 
     public static Connection getConnection(String url) {
@@ -25,7 +29,7 @@ public class DatabaseConnectionManager {
             } else {
                 System.out.println("Database '" + databaseName + "' does not exist. Creating it...");
                 createDatabase(serverConnection, databaseName);
-                String sqlScriptPath = "src/main/java/com/fges/groceriesDAO/groceryListMysqlStructure.sql";
+                String sqlScriptPath = "src/main/resources/mysql-scripts/groceryListMysqlStructure.sql";
                 return initializeDatabase(serverUrl, databaseName, username, password, sqlScriptPath);
             }
         } catch (SQLException e) {
