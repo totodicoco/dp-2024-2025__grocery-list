@@ -13,7 +13,7 @@ public class OptionsUsed {
         this.category = cmd.getOptionValue("c", "default");
     }
 
-    private String determineFormat(String format, String fileName) {
+    public String determineFormat(String format, String fileName) {
         if (format == null) {
             if (fileName != null) {
                 if (fileName.endsWith(".csv")) return "csv";

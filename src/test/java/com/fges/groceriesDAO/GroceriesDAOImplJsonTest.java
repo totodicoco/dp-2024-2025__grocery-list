@@ -3,6 +3,7 @@ package com.fges.groceriesDAO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fges.modules.GroceryList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -21,16 +22,17 @@ class GroceriesDAOImplJsonTest {
     private ObjectMapper objectMapper;
     private final String testFileName = "test-groceries.json";
 
+    @BeforeEach
     void setUp() {
-        objectMapper = mock(ObjectMapper.class);
-        groceriesDAO = new GroceriesDAOImplJson(testFileName);
+        objectMapper = mock(ObjectMapper.class);  
+        groceriesDAO = new GroceriesDAOImplJson(testFileName);  
     }
 
     @Test
     void testSaveGroceryList() throws IOException {
         GroceryList groceryList = mock(GroceryList.class);
         Map<String, Map<String, Integer>> groceryMap = new HashMap<>();
-        when(groceryList.getGroceryList()).thenReturn(groceryMap);
+        when(groceryList.getGroceryList()).thenReturn(groceryMap); 
 
         groceriesDAO.saveGroceryList(groceryList);
 
@@ -46,17 +48,19 @@ class GroceriesDAOImplJsonTest {
 
         Files.writeString(filePath, fileContent);
         when(objectMapper.readValue(fileContent, new TypeReference<Map<String, Map<String, Integer>>>() {}))
-                .thenReturn(groceryMap);
+                .thenReturn(groceryMap);  
 
         GroceryList result = groceriesDAO.loadGroceryList();
 
         assertEquals(expectedGroceryList, result);
+
         Files.deleteIfExists(filePath);
     }
 
     @Test
     void testLoadGroceryList_FileDoesNotExist() throws IOException {
         GroceryList result = groceriesDAO.loadGroceryList();
+
         assertTrue(result.getGroceryList().isEmpty());
     }
 }
