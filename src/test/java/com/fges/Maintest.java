@@ -1,32 +1,57 @@
-//package com.fges;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import java.io.ByteArrayOutputStream;
-//import java.io.File;
-//import java.io.IOException;
-//import java.io.PrintStream;
-//import java.nio.file.Files;
-//import java.nio.file.Paths;
-//import java.util.Map;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertTrue;
-//
-//class MainTest {
-//    // les fichiers
-//    private static final String FICHIER_JSON = "test_grocery.json";
-//    private static final String FICHIER_CSV = "test_grocery.csv";
-//    private final ByteArrayOutputStream sortieCapturee = new ByteArrayOutputStream();
-//
-//    @BeforeEach
-//    void setup() throws IOException {
-//        // sortie du system
-//        System.setOut(new PrintStream(sortieCapturee));
-//        // clean les fichiers json et csv a chaque test
-//        Map<String, Integer> mapVide = Map.of(); // Créer une carte vide
-//        Main.OBJECT_MAPPER.writeValue(new File(FICHIER_JSON), mapVide); // Écrire la carte vide dans le fichier JSON
-//        Files.writeString(Paths.get(FICHIER_CSV), "Item,Quantity\n"); // Réinitialiser le fichier CSV
-//    }
-//}
+package com.fges;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class MainTest {
+
+    private final ByteArrayOutputStream sortieCapturee = new ByteArrayOutputStream();
+    private final PrintStream sortieOriginale = System.out;
+
+    @BeforeEach
+    void setUp() {
+        System.setOut(new PrintStream(sortieCapturee));
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.setOut(sortieOriginale);
+    }
+
+    @Test
+    void testExecReturnZeroWithValidCommand() throws Exception {
+        String[] args = {"add", "--item", "Banane", "--quantity", "2", "--category", "Fruits", "--file", "test_grocery.json", "--format", "json"};
+        int result = Main.exec(args);
+        assertEquals(0, result);
+    }
+
+    @Test
+    void testExecReturnsOneOnParseException() throws Exception {
+        // Simule une commande invalide (option manquante)
+        String[] args = {"add", "--item", "Banane"};
+        int result = Main.exec(args);
+        assertEquals(1, result);
+    }
+
+    @Test
+    void testExecReturnsOneOnIllegalArgumentException() throws Exception {
+        // Simule un mauvais format de commande (valeur invalide)
+        String[] args = {"add", "--item", "Banane", "--quantity", "deux", "--category", "Fruits", "--file", "test_grocery.json", "--format", "json"};
+        int result = Main.exec(args);
+        assertEquals(1, result);
+    }
+
+    @Test
+    void testExecReturnsOneOnGenericException() throws Exception {
+        // Simule une commande inconnue
+        String[] args = {"unknownCommand", "--file", "test_grocery.json", "--format", "json"};
+        int result = Main.exec(args);
+        assertEquals(1, result);
+    }
+}
