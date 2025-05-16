@@ -1,31 +1,31 @@
 package com.fges.services;
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.modules.GroceryList;
-import com.fges.services.DTO.RemoveDTO;
+import com.fges.services.DTO.RemoveItemDTO;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class RemoveService {
+public class RemoveItemService {
     private final GroceriesDAO groceriesDAO;
 
-    public RemoveService(GroceriesDAO groceriesDAO) {
+    public RemoveItemService(GroceriesDAO groceriesDAO) {
         this.groceriesDAO = groceriesDAO;
     }
 
     /**
      * Removes an item from the grocery list in the groceriesDAO.
      *
-     * @param removeDTO the DTO containing the item name to remove
+     * @param removeItemDTO the DTO containing the item name to remove
      * @return true if the item was removed successfully, false otherwise
      * @throws IOException if there is an error saving the grocery list
      */
-    public Boolean remove(RemoveDTO removeDTO) throws IOException {
+    public Boolean remove(RemoveItemDTO removeItemDTO) throws IOException {
         Boolean success = false;
 
         GroceryList groceryList = groceriesDAO.loadGroceryList();
-        String itemName = removeDTO.itemName();
+        String itemName = removeItemDTO.itemName();
         List<String> categories = groceryList.getAllCategoriesWithItem(itemName);
         for(String category : categories){
             Map<String, Integer> categoryItems = groceryList.getCategoryItems(category);

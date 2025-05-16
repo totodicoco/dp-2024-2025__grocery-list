@@ -2,14 +2,14 @@ package com.fges.groceryWeb;
 
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.modules.GroceryList;
-import com.fges.services.AddService;
-import com.fges.services.DTO.AddDTO;
+import com.fges.services.AddItemService;
+import com.fges.services.DTO.AddItemDTO;
 import com.fges.services.DTO.InfoDTO;
-import com.fges.services.DTO.ListDTO;
-import com.fges.services.DTO.RemoveDTO;
+import com.fges.services.DTO.ListGroceriesDTO;
+import com.fges.services.DTO.RemoveItemDTO;
 import com.fges.services.InfoService;
-import com.fges.services.ListService;
-import com.fges.services.RemoveService;
+import com.fges.services.ListGroceriesService;
+import com.fges.services.RemoveItemService;
 import fr.anthonyquere.MyGroceryShop;
 
 import java.io.IOException;
@@ -42,10 +42,10 @@ public class SimpleGroceryShop implements MyGroceryShop{
     @Override
     public List<WebGroceryItem> getGroceries() {
         System.out.println(this.groceries);
-        ListService listService = new ListService(groceriesDAO);
-        ListDTO listDTO = new ListDTO();
+        ListGroceriesService listGroceriesService = new ListGroceriesService(groceriesDAO);
+        ListGroceriesDTO listGroceriesDTO = new ListGroceriesDTO();
         try {
-            listService.list(listDTO);
+            listGroceriesService.list(listGroceriesDTO);
             reload();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -55,10 +55,10 @@ public class SimpleGroceryShop implements MyGroceryShop{
 
     @Override
     public void addGroceryItem(String name, int quantity, String category) {
-        AddService addService = new AddService(groceriesDAO);
-        AddDTO addDTO = new AddDTO(name, quantity, category);
+        AddItemService addItemService = new AddItemService(groceriesDAO);
+        AddItemDTO addItemDTO = new AddItemDTO(name, quantity, category);
         try {
-            addService.add(addDTO);
+            addItemService.add(addItemDTO);
             reload();
         }
         catch (IOException e) {
@@ -68,10 +68,10 @@ public class SimpleGroceryShop implements MyGroceryShop{
 
     @Override
     public void removeGroceryItem(String name) {
-        RemoveService removeService = new RemoveService(groceriesDAO);
-        RemoveDTO removeDTO = new RemoveDTO(name);
+        RemoveItemService removeItemService = new RemoveItemService(groceriesDAO);
+        RemoveItemDTO removeItemDTO = new RemoveItemDTO(name);
         try {
-            removeService.remove(removeDTO);
+            removeItemService.remove(removeItemDTO);
             reload();
         }
         catch (IOException e) {

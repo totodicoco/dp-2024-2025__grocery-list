@@ -1,16 +1,16 @@
 package com.fges.services;
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.groceryWeb.SimpleGroceryShop;
-import com.fges.services.DTO.WebDTO;
+import com.fges.services.DTO.WebGroceriesDTO;
 import fr.anthonyquere.GroceryShopServer;
 import fr.anthonyquere.MyGroceryShop;
 
 import java.io.IOException;
 
-public class WebService {
+public class WebGroceriesService {
     private final GroceriesDAO groceriesDAO;
 
-    public WebService(GroceriesDAO groceriesDAO) {
+    public WebGroceriesService(GroceriesDAO groceriesDAO) {
         this.groceriesDAO = groceriesDAO;
     }
 
@@ -21,12 +21,13 @@ public class WebService {
      * @return true if the item was added successfully, false otherwise
      * @throws IOException if there is an error saving the grocery list
      */
-    public Boolean web(WebDTO webDTO) throws IOException {
+    public Boolean web(WebGroceriesDTO webGroceriesDTO) throws IOException {
         Boolean success = false;
 
         MyGroceryShop groceryShop = new SimpleGroceryShop(groceriesDAO);
         GroceryShopServer server = new GroceryShopServer(groceryShop);
-        server.start(8080);
+        int port = webGroceriesDTO.portNumber();
+        server.start(port);
 
         System.out.println("Grocery shop server started at http://localhost:8080");
 
