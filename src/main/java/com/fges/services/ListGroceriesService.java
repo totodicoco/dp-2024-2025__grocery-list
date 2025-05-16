@@ -1,16 +1,16 @@
 package com.fges.services;
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.modules.GroceryList;
-import com.fges.services.DTO.ListDTO;
+import com.fges.services.DTO.ListGroceriesDTO;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class ListService {
+public class ListGroceriesService {
 
     private final GroceriesDAO groceriesDAO;
 
-    public ListService(GroceriesDAO groceriesDAO) {
+    public ListGroceriesService(GroceriesDAO groceriesDAO) {
         this.groceriesDAO = groceriesDAO;
     }
 
@@ -20,7 +20,7 @@ public class ListService {
      * @return true if the grocery list was listed successfully, false otherwise
      * @throws IOException if there is an error loading the grocery list
      */
-    public Boolean list(ListDTO listDTO) throws IOException{
+    public Boolean list(ListGroceriesDTO listGroceriesDTO) throws IOException{
         boolean success = false;
 
         GroceryList groceryList = groceriesDAO.loadGroceryList();
