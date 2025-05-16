@@ -4,13 +4,13 @@ import java.sql.Connection;
 
 public class GroceriesDAOFactory{
 
-    public GroceriesDAO createGroceriesDAO(String format, String filename) throws IllegalArgumentException {
+    public GroceriesDAO createGroceriesDAO(String format, String source) throws IllegalArgumentException {
         GroceriesDAO groceriesDAO;
         switch (format) {
-            case "json" -> groceriesDAO = new GroceriesDAOImplJson(filename);
-            case "csv" -> groceriesDAO = new GroceriesDAOImplCsv(filename);
+            case "json" -> groceriesDAO = new GroceriesDAOImplJson(source);
+            case "csv" -> groceriesDAO = new GroceriesDAOImplCsv(source);
             case "mysql" -> {
-                Connection connection = DatabaseConnectionManager.getConnection(filename);
+                Connection connection = DatabaseConnectionManager.getConnection(source);
                 groceriesDAO = new GroceriesDAOImplMySQL(connection);
             }
             default -> throw new IllegalArgumentException("Unknown format: " + format);
