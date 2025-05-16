@@ -13,7 +13,7 @@ class CommandFactoryTest {
         String[] args = {"add", "Pomme", "2", "-s", "test.json", "-f", "json"};
         CommandFactory factory = new CommandFactory(args);
         Command command = factory.getCommand();
-        assertTrue(command instanceof AddCommand);
+        assertTrue(command instanceof AddGroceriesItemCommand);
     }
 
     @Test
@@ -21,7 +21,7 @@ class CommandFactoryTest {
         String[] args = {"clear", "-s", "data.json", "-f", "json"};
         CommandFactory factory = new CommandFactory(args);
         Command command = factory.getCommand();
-        assertTrue(command instanceof ClearCommand);
+        assertTrue(command instanceof ClearGroceriesCommand);
     }
 
     @Test
@@ -30,6 +30,30 @@ class CommandFactoryTest {
         CommandFactory factory = new CommandFactory(args);
         Command command = factory.getCommand();
         assertTrue(command instanceof InfoCommand);
+    }
+
+    @Test
+    void testGetRemoveCommand() throws ParseException {
+        String[] args = {"remove", "Banane", "-s", "test.json", "-f", "json"};
+        CommandFactory factory = new CommandFactory(args);
+        Command command = factory.getCommand();
+        assertTrue(command instanceof RemoveGroceriesItemCommand);
+    }
+
+    @Test
+    void testGetListCommand() throws ParseException {
+        String[] args = {"list", "-s", "data.json", "-f", "json"};
+        CommandFactory factory = new CommandFactory(args);
+        Command command = factory.getCommand();
+        assertTrue(command instanceof ListGroceriesCommand);
+    }
+
+    @Test
+    void testGetWebCommand() throws ParseException {
+        String[] args = {"web", "8080", "-s", "webdata.json", "-f", "json"};
+        CommandFactory factory = new CommandFactory(args);
+        Command command = factory.getCommand();
+        assertTrue(command instanceof WebGroceriesCommand);
     }
 
     @Test
@@ -47,7 +71,7 @@ class CommandFactoryTest {
         CommandFactory factory = new CommandFactory(args);
         OptionsUsed options = factory.optionsUsed;
 
-        assertEquals("data.csv", options.getFilename());
+        assertEquals("data.csv", options.getSource());
         assertEquals("csv", options.getFormat());
         assertEquals("fruits", options.getCategory());
     }
