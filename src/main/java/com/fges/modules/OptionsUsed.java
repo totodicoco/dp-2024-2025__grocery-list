@@ -3,13 +3,13 @@ package com.fges.modules;
 import org.apache.commons.cli.CommandLine;
 
 public class OptionsUsed {
-    public String filename;
+    public String source;
     public String format;
     public String category;
 
     public OptionsUsed(CommandLine cmd) {
-        this.filename = cmd.getOptionValue("s");
-        this.format = determineFormat(cmd.getOptionValue("f"), this.filename);
+        this.source = cmd.getOptionValue("s");
+        this.format = determineFormat(cmd.getOptionValue("f"), this.source);
         this.category = cmd.getOptionValue("c", "default");
     }
 
@@ -24,8 +24,8 @@ public class OptionsUsed {
         return format;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getSource() {
+        return source;
     }
 
     public String getFormat() {

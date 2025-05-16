@@ -23,7 +23,7 @@ public class ListGroceriesCommand implements Command {
         if (args.size() != 1) {
             throw new IllegalArgumentException("list does not take any arguments");
         }
-        if (optionsUsed.getFilename() == null) {
+        if (optionsUsed.getSource() == null) {
             throw new IllegalArgumentException("No filename provided. Use -s <filename> to set the filename.");
         }
     }
@@ -31,7 +31,7 @@ public class ListGroceriesCommand implements Command {
     @Override
     public void execute() throws IOException {
         GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
-        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
+        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getSource());
         ListGroceriesService listGroceriesService = new ListGroceriesService(groceriesDAO);
         ListGroceriesDTO listGroceriesDTO = new ListGroceriesDTO();
         listGroceriesService.list(listGroceriesDTO);

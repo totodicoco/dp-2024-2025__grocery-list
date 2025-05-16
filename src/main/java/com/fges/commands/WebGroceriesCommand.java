@@ -28,7 +28,7 @@ public class WebGroceriesCommand implements Command {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("The port number must be an integer.");
         }
-        if (this.optionsUsed.getFilename() == null) {
+        if (this.optionsUsed.getSource() == null) {
             throw new IllegalArgumentException("No filename provided. Use -s <filename> to set the filename.");
         }
     }
@@ -37,7 +37,7 @@ public class WebGroceriesCommand implements Command {
     public void execute() throws IOException {
         int portNumber = Integer.parseInt(args.get(1));
         GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
-        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
+        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getSource());
         WebGroceriesService webGroceriesService = new WebGroceriesService(groceriesDAO);
         WebGroceriesDTO webGroceriesDTO = new WebGroceriesDTO(portNumber);
         webGroceriesService.web(webGroceriesDTO);

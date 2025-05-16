@@ -23,7 +23,7 @@ public class RemoveGroceriesItemCommand implements Command {
         if (args.size() != 2) {
             throw new IllegalArgumentException("Usage: remove <item>");
         }
-        if (optionsUsed.getFilename() == null) {
+        if (optionsUsed.getSource() == null) {
             throw new IllegalArgumentException("No filename provided. Use -s <filename> to set the filename.");
         }
     }
@@ -32,7 +32,7 @@ public class RemoveGroceriesItemCommand implements Command {
     public void execute() throws IOException {
         String itemName = args.get(1);
         GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
-        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
+        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getSource());
         RemoveGroceriesItemService removeGroceriesItemService = new RemoveGroceriesItemService(groceriesDAO);
         RemoveGroceriesItemDTO removeGroceriesItemDTO = new RemoveGroceriesItemDTO(itemName);
         removeGroceriesItemService.remove(removeGroceriesItemDTO);

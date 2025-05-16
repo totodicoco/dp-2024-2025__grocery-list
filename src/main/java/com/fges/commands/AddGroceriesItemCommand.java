@@ -28,7 +28,7 @@ public class AddGroceriesItemCommand implements Command {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("The quantity must be an integer");
         }
-        if (this.optionsUsed.getFilename() == null) {
+        if (this.optionsUsed.getSource() == null) {
             throw new IllegalArgumentException("No filename provided. Use -s <filename> to set the filename.");
         }
     }
@@ -37,7 +37,7 @@ public class AddGroceriesItemCommand implements Command {
     public void execute() throws IOException {
         String itemName = args.get(1);
         GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
-        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
+        GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getSource());
         int quantity = Integer.parseInt(args.get(2));
         AddGroceriesItemService addGroceriesItemService = new AddGroceriesItemService(groceriesDAO);
         AddGroceriesItemDTO addItemDTO = new AddGroceriesItemDTO(itemName, quantity, optionsUsed.getCategory());
