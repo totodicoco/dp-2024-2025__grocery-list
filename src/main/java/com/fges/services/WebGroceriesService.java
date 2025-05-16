@@ -37,6 +37,7 @@ public class WebGroceriesService {
             throw new RuntimeException(e);
         }
 
+        success = true;
         return success;
     }
 

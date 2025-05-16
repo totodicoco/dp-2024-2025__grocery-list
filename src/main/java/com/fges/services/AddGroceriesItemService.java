@@ -34,6 +34,7 @@ public class AddGroceriesItemService {
                         .getOrDefault(itemName, 0) + quantity);
         groceriesDAO.saveGroceryList(groceryList);
 
+        success = true;
         return success;
     }
 

@@ -24,13 +24,13 @@ public class GroceryListTest {
     }
 
     @Test
-    public void testFromMap() {
+    public void should_create_from_map() {
         assertNotNull(groceryList);
         assertEquals(1, groceryList.getGroceryList().size());
     }
 
     @Test
-    public void testGetGroceryList() {
+    public void should_get_grocery_list() {
         Map<String, Map<String, Integer>> list = groceryList.getGroceryList();
         assertTrue(list.containsKey("Fruits"));
         assertEquals(1, list.get("Fruits").size());
@@ -38,7 +38,7 @@ public class GroceryListTest {
     }
 
     @Test
-    public void testGetCategoryItems() {
+    public void should_get_all_items_from_given_category() {
         Map<String, Integer> items = groceryList.getCategoryItems("Fruits");
         assertNotNull(items);
         assertEquals(1, items.size());
@@ -47,7 +47,7 @@ public class GroceryListTest {
     }
 
     @Test
-    public void testGetAllCategoriesWithItem() {
+    public void should_get_all_categories_containing_given_item() {
         List<String> categories = groceryList.getAllCategoriesWithItem("Apple");
         assertNotNull(categories);
         assertEquals(1, categories.size());
