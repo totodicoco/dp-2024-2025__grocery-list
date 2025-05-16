@@ -10,7 +10,9 @@ public class InfoService {
      * Show system information as requested from TP3
      */
 
-    public void info(InfoDTO infoDTO) {
+    public Boolean info(InfoDTO infoDTO) {
+        Boolean success = false;
+
         // Display system information
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedDate = infoDTO.date().format(formatter);
@@ -18,5 +20,8 @@ public class InfoService {
         System.out.println("Today's date: " + formattedDate);
         System.out.println("Operating System: " + infoDTO.osName());
         System.out.println("Java version: " + infoDTO.javaVersion());
+
+        success = true;
+        return success;
     }
 }

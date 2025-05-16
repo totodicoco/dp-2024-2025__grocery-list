@@ -69,4 +69,17 @@ public class GroceryList {
             return new GroceryList(new HashMap<>(groceryList));
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroceryList that = (GroceryList) o;
+        return groceryList.equals(that.groceryList);
+    }
+
+    @Override
+    public int hashCode() {
+        return groceryList.hashCode();
+    }
 }

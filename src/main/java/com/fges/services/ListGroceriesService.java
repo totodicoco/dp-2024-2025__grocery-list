@@ -36,6 +36,7 @@ public class ListGroceriesService {
             System.out.println(listOutput);
         }
 
+        success = true;
         return success;
     }
 

@@ -40,6 +40,7 @@ public class RemoveGroceriesItemService {
         }
         groceriesDAO.saveGroceryList(groceryList);
 
+        success = true;
         return success;
     }
 }

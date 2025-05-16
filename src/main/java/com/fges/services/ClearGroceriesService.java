@@ -24,6 +24,7 @@ public class ClearGroceriesService {
         groceryList.getGroceryList().clear();
         groceriesDAO.saveGroceryList(groceryList);
 
+        success = true;
         return success;
     }
 }

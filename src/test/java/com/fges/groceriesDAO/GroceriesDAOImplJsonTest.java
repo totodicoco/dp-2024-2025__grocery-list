@@ -1,62 +1,97 @@
 package com.fges.groceriesDAO;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fges.modules.GroceryList;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class GroceriesDAOImplJsonTest {
 
     private GroceriesDAOImplJson groceriesDAO;
-    private ObjectMapper objectMapper;
     private final String testFileName = "test-groceries.json";
 
-    void setUp() {
-        objectMapper = mock(ObjectMapper.class);
+    @BeforeEach
+    void setUp() throws IOException {
+        Files.deleteIfExists(Path.of(testFileName)); // Ensure no leftover file exists
+        Files.createFile(Path.of(testFileName));    // Create the test file
         groceriesDAO = new GroceriesDAOImplJson(testFileName);
     }
 
+    @AfterEach
+    void tearDown() throws IOException {
+        Files.deleteIfExists(Path.of(testFileName)); // Clean up the test file
+    }
+
     @Test
-    void testSaveGroceryList() throws IOException {
-        GroceryList groceryList = mock(GroceryList.class);
-        Map<String, Map<String, Integer>> groceryMap = new HashMap<>();
-        when(groceryList.getGroceryList()).thenReturn(groceryMap);
+    void should_save_grocery_list_to_file() throws IOException {
+        GroceryList.Builder builder = new GroceryList.Builder();
+        builder.add("Apple", 3, "Fruits");
+        builder.add("Banana", 5, "Fruits");
+        builder.add("Carrot", 2, "Vegetables");
+        GroceryList groceryList = builder.build();
 
         groceriesDAO.saveGroceryList(groceryList);
 
-        verify(objectMapper, times(1)).writeValue(new File(testFileName), groceryMap);
+        String expectedContent = """
+        {
+          "Vegetables": {
+            "Carrot": 2
+          },
+          "Fruits": {
+            "Apple": 3,
+            "Banana": 5
+          }
+        }
+        """;
+
+        String actualContent = Files.readString(Path.of(testFileName));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        var expectedJson = objectMapper.readTree(expectedContent);
+        var actualJson = objectMapper.readTree(actualContent);
+
+        assertEquals(expectedJson, actualJson);
     }
 
     @Test
-    void testLoadGroceryList_FileExists() throws IOException {
-        Path filePath = Path.of(testFileName);
-        String fileContent = "{\"category\":{\"item\":1}}";
-        Map<String, Map<String, Integer>> groceryMap = Map.of("category", Map.of("item", 1));
-        GroceryList expectedGroceryList = GroceryList.fromMap(groceryMap);
-
-        Files.writeString(filePath, fileContent);
-        when(objectMapper.readValue(fileContent, new TypeReference<Map<String, Map<String, Integer>>>() {}))
-                .thenReturn(groceryMap);
+    void should_load_grocery_list_from_file_when_file_exists() throws IOException {
+        String fileContent = """
+        {
+          "Fruits": {
+            "Apple": 3,
+            "Banana": 5
+          },
+          "Vegetables": {
+            "Carrot": 2
+          }
+        }
+        """;
+        Files.writeString(Path.of(testFileName), fileContent);
 
         GroceryList result = groceriesDAO.loadGroceryList();
+
+        GroceryList.Builder builder = new GroceryList.Builder();
+        builder.add("Apple", 3, "Fruits");
+        builder.add("Banana", 5, "Fruits");
+        builder.add("Carrot", 2, "Vegetables");
+        GroceryList expectedGroceryList = builder.build();
 
         assertEquals(expectedGroceryList, result);
-        Files.deleteIfExists(filePath);
     }
 
     @Test
-    void testLoadGroceryList_FileDoesNotExist() throws IOException {
+    void should_load_empty_grocery_list_when_file_does_not_exist() throws IOException {
+        Files.deleteIfExists(Path.of(testFileName)); // Ensure the file does not exist
+
         GroceryList result = groceriesDAO.loadGroceryList();
-        assertTrue(result.getGroceryList().isEmpty());
+
+        assertTrue(result.getGroceryList().isEmpty(), "The grocery list should be empty if the file does not exist.");
     }
 }

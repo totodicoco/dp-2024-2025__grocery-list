@@ -16,7 +16,7 @@ public class InfoCommand implements Command {
     @Override
     public void validateArgs() {
         if (args.size() != 1) {
-            throw new IllegalArgumentException("list does not take any arguments");
+            throw new IllegalArgumentException("info does not take any arguments");
         }
     }
 
