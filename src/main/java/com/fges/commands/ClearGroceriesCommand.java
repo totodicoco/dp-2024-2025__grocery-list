@@ -3,17 +3,17 @@ package com.fges.commands;
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.groceriesDAO.GroceriesDAOFactory;
 import com.fges.modules.OptionsUsed;
-import com.fges.services.ClearListService;
+import com.fges.services.ClearGroceriesService;
 import com.fges.services.DTO.ClearGroceriesDTO;
 
 import java.io.IOException;
 import java.util.List;
 
-public class ClearListCommand implements Command {
+public class ClearGroceriesCommand implements Command {
     private final List<String> args;
     private final OptionsUsed optionsUsed;
 
-    public ClearListCommand(List<String> args, OptionsUsed optionsUsed) {
+    public ClearGroceriesCommand(List<String> args, OptionsUsed optionsUsed) {
         this.args = args;
         this.optionsUsed = optionsUsed;
     }
@@ -32,8 +32,8 @@ public class ClearListCommand implements Command {
     public void execute() throws IOException {
         GroceriesDAOFactory groceriesDAOFactory = new GroceriesDAOFactory();
         GroceriesDAO groceriesDAO = groceriesDAOFactory.createGroceriesDAO(optionsUsed.getFormat(), optionsUsed.getFilename());
-        ClearListService clearListService = new ClearListService(groceriesDAO);
+        ClearGroceriesService clearGroceriesService = new ClearGroceriesService(groceriesDAO);
         ClearGroceriesDTO clearGroceriesDTO = new ClearGroceriesDTO();
-        clearListService.clear(clearGroceriesDTO);
+        clearGroceriesService.clear(clearGroceriesDTO);
     }
 }

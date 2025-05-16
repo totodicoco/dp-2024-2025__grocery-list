@@ -1,15 +1,15 @@
 package com.fges.services;
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.modules.GroceryList;
-import com.fges.services.DTO.AddItemDTO;
+import com.fges.services.DTO.AddGroceriesItemDTO;
 
 import java.io.IOException;
 import java.util.HashMap;
 
-public class AddItemService {
+public class AddGroceriesItemService {
     private final GroceriesDAO groceriesDAO;
 
-    public AddItemService(GroceriesDAO groceriesDAO) {
+    public AddGroceriesItemService(GroceriesDAO groceriesDAO) {
         this.groceriesDAO = groceriesDAO;
     }
 
@@ -21,7 +21,7 @@ public class AddItemService {
      * @return true if the item was added successfully, false otherwise
      * @throws IOException if there is an error saving the grocery list
      */
-    public Boolean add(AddItemDTO addItemDTO) throws IOException {
+    public Boolean add(AddGroceriesItemDTO addItemDTO) throws IOException {
         Boolean success = false;
 
         String itemName = addItemDTO.itemName();

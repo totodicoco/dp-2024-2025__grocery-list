@@ -32,10 +32,10 @@ public class CommandFactory {
     public Command getCommand() {
         String commandName = this.command.get(0);
         return switch (commandName) {
-            case "add" -> new AddItemCommand(this.command, optionsUsed);
+            case "add" -> new AddGroceriesItemCommand(this.command, optionsUsed);
             case "list" -> new ListGroceriesCommand(this.command, optionsUsed);
-            case "remove" -> new RemoveItemCommand(this.command, optionsUsed);
-            case "clear" -> new ClearListCommand(this.command, optionsUsed);
+            case "remove" -> new RemoveGroceriesItemCommand(this.command, optionsUsed);
+            case "clear" -> new ClearGroceriesCommand(this.command, optionsUsed);
             case "info" -> new InfoCommand(this.command);
             case "web" -> new WebGroceriesCommand(this.command, optionsUsed);
             default -> throw new IllegalArgumentException("Unknown command: " + commandName);

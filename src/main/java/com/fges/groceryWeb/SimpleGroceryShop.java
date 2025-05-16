@@ -2,14 +2,14 @@ package com.fges.groceryWeb;
 
 import com.fges.groceriesDAO.GroceriesDAO;
 import com.fges.modules.GroceryList;
-import com.fges.services.AddItemService;
-import com.fges.services.DTO.AddItemDTO;
+import com.fges.services.AddGroceriesItemService;
+import com.fges.services.DTO.AddGroceriesItemDTO;
 import com.fges.services.DTO.InfoDTO;
 import com.fges.services.DTO.ListGroceriesDTO;
-import com.fges.services.DTO.RemoveItemDTO;
+import com.fges.services.DTO.RemoveGroceriesItemDTO;
 import com.fges.services.InfoService;
 import com.fges.services.ListGroceriesService;
-import com.fges.services.RemoveItemService;
+import com.fges.services.RemoveGroceriesItemService;
 import fr.anthonyquere.MyGroceryShop;
 
 import java.io.IOException;
@@ -55,10 +55,10 @@ public class SimpleGroceryShop implements MyGroceryShop{
 
     @Override
     public void addGroceryItem(String name, int quantity, String category) {
-        AddItemService addItemService = new AddItemService(groceriesDAO);
-        AddItemDTO addItemDTO = new AddItemDTO(name, quantity, category);
+        AddGroceriesItemService addGroceriesItemService = new AddGroceriesItemService(groceriesDAO);
+        AddGroceriesItemDTO addItemDTO = new AddGroceriesItemDTO(name, quantity, category);
         try {
-            addItemService.add(addItemDTO);
+            addGroceriesItemService.add(addItemDTO);
             reload();
         }
         catch (IOException e) {
@@ -68,10 +68,10 @@ public class SimpleGroceryShop implements MyGroceryShop{
 
     @Override
     public void removeGroceryItem(String name) {
-        RemoveItemService removeItemService = new RemoveItemService(groceriesDAO);
-        RemoveItemDTO removeItemDTO = new RemoveItemDTO(name);
+        RemoveGroceriesItemService removeGroceriesItemService = new RemoveGroceriesItemService(groceriesDAO);
+        RemoveGroceriesItemDTO removeGroceriesItemDTO = new RemoveGroceriesItemDTO(name);
         try {
-            removeItemService.remove(removeItemDTO);
+            removeGroceriesItemService.remove(removeGroceriesItemDTO);
             reload();
         }
         catch (IOException e) {

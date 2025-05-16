@@ -4,10 +4,10 @@ import com.fges.modules.GroceryList;
 import com.fges.services.DTO.ClearGroceriesDTO;
 
 import java.io.IOException;
-public class ClearListService {
+public class ClearGroceriesService {
     private final GroceriesDAO groceriesDAO;
 
-    public ClearListService(GroceriesDAO groceriesDAO) {
+    public ClearGroceriesService(GroceriesDAO groceriesDAO) {
         this.groceriesDAO = groceriesDAO;
     }
 
