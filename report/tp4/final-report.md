@@ -26,6 +26,8 @@ Maxence Martin
   too complex; the more design patterns we used, the easier it was to understand the code.
 * We challenged ourselves to use our (superb) architecture to implement a MySQL data source,
 and to implement a clear grocery list command.
+* * Clear command usage example: `-f json -s groceries.json clear`
+* * MySQL data source usage example: `-f mysql -s jdbc:mysql://localhost:3306/groceries web 8080`
 
 ## 3) The design patterns we used
 
