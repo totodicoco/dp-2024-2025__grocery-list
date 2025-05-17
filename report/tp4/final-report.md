@@ -62,10 +62,12 @@ Implement how to save and load the data from the new data source.
 * Update our GroceryList module to include a store attribute.
 * Update the logic of all DAO implementations to include the store attribute when loading and saving the data.
 * Update the logic all Services and their DTOs to take into account the store attribute.
--> This is good enough when using the Services from an interface that considers the store attribute.
+
+This is good enough when using the Services from an interface that considers the store attribute.
 But we should make the command line interface consider the store attribute as well.
+
 * Update the CommandFactory to include a --store option for the command line interface.
-* Update the validation and execution methods of the implementations of the Command class.
+* Update the argument validation and execution methods of the implementations of the Command class.
 
 ## 5) Schema
 
