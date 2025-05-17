@@ -73,4 +73,4 @@ But we should make the command line interface consider the store attribute as we
 
 ## 5) Schema
 
-![tp4-schema.png](tp4-schema.png)
+![tp4-schema.png](shema-tp4.png)
